@@ -1,0 +1,44 @@
+{
+  "main": "node_modules/expo/AppEntry.js",
+  "scripts": {
+    "start": "expo start",
+    "android": "expo start --android",
+    "ios": "expo start --ios",
+    "web": "expo start --web",
+    "eject": "expo eject"
+  },
+  "dependencies": {
+    "@expo/ngrok": "^2.4.3",
+    "@firebase/storage": "^0.9.4",
+    "@react-native-community/datetimepicker": "4.0.0",
+    "@react-native-community/slider": "4.1.12",
+    "@react-native-firebase/app": "^14.5.1",
+    "@react-native-firebase/firestore": "^14.5.1",
+    "@react-navigation/native": "^6.0.8",
+    "@react-navigation/native-stack": "^6.1.0",
+    "expo": "^44.0.0",
+    "expo-image-picker": "^12.0.2",
+    "expo-status-bar": "~1.2.0",
+    "expo-updates": "^0.11.6",
+    "firebase": "8.2.3",
+    "react": "17.0.1",
+    "react-dom": "17.0.1",
+    "react-native": "0.64.3",
+    "react-native-date-picker": "^4.2.0",
+    "react-native-datepicker": "^1.7.2",
+    "react-native-dropdown-picker": "^5.4.0",
+    "react-native-form-validator": "^0.5.1",
+    "react-native-image-picker": "^4.7.3",
+    "react-native-masked-text": "^1.13.0",
+    "react-native-multi-selectbox": "^1.5.0",
+    "react-native-multiple-select": "^0.5.7",
+    "react-native-safe-area-context": "3.3.2",
+    "react-native-screens": "~3.10.1",
+    "react-native-simple-radio-button": "^2.7.4",
+    "react-native-web": "0.17.1"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.12.9"
+  },
+  "private": true
+}
