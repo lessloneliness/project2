@@ -13,46 +13,39 @@ import storage from 'firebase/storage'; // 1
 
 const HomeScreen = () => {
   
-
-  const ref = firebase.storage().ref('/'+'C553278A-B4D5-4ADA-81E4-DCE58B938A01.jpg');
-  const z =  ref.getDownloadURL().then((url) => {
-    setImage(url);
-  });
-
   const navigation = useNavigation();
   const [myText, setMyText] = useState("Hello");
-  const [bio, setBio] = useState("details");
+  const [bio, setBio] = useState("");
   const [image, setImage] = useState(null);
   const [userName, setUserName] = useState(null);
-  const [photourlDb, setPhotourlDb] = useState("");
-
-  const user = firebase.auth().currentUser;
-
-
-
-  const handleSignOut = () => {  // when the user click on sign out , fire base save it.
-    auth.signOut().then(() => {navigation.replace("Less loneless");})
-      .catch((error) => alert(error.message));
-};
-
-
-  if (user) console.log("User email: "+ user.email); // check if work
-   var userRef = firebase.firestore().collection('users').doc(user.uid); // get the uid.
+  const user = firebase.auth().currentUser; // from auth fire base
+  const userRef = firebase.firestore().collection('users').doc(user.uid); // get the uid.
    
+  userRef.get().then(function(doc) {
+    if (doc.exists) {
+      const userNameDB =JSON.stringify(doc.data().Name.First); //his name from the data  base
+      const bioFromDb =JSON.stringify(doc.data().Bio); 
+      setUserName (userNameDB);  
+      if(bioFromDb.length>2) setBio(bioFromDb);
+      const ref = firebase.storage().ref('/'+user.uid+'.jpg'); // get the url from fire base stotage 
+       ref.getDownloadURL().then((url) => {
+         if(url!=null)
+          setImage(url);
 
-    userRef.get().then(function(doc) {
-        if (doc.exists) {
-          var t =JSON.stringify(doc.data().Name.First);
-          setUserName (t);
-          setPhotourlDb(JSON.stringify(doc.data().Photo))
-          console.log('user: ' + JSON.stringify(doc.data().Name));
-        } else {
-            // doc.data() will be undefined in this case
-            console.log("No such document!");
-        }
-    }).catch(function(error) {
-        console.log("Error getting document:", error);
-    });
+      }).catch((e)=>{console.log(e)});
+
+      console.log('user: ' + JSON.stringify(doc.data().Name));
+    } else {
+      
+        // doc.data() will be undefined in this case
+        console.log("No such document!");
+
+    }
+}).catch(function(error) {
+
+    console.log("Error getting document:", error);
+});
+  
 
 
 
@@ -71,11 +64,9 @@ const HomeScreen = () => {
       setImage(result.uri);
     }
 
-    const reference = firebase.storage().ref('black-t-shirt-sm.png');
 
-    
 
-    const filename = image.substring(image.lastIndexOf('/') + 1);
+    //const filename = image.substring(image.lastIndexOf('/') + 1);
 
     const blob = await new Promise((resolve, reject) => {
       const xhr = new XMLHttpRequest();
@@ -92,9 +83,9 @@ const HomeScreen = () => {
     const ref = firebase
       .storage()
       .ref()
-      .child(filename);
+      .child(user.uid+'.jpg');
       
-    const task = ref.put(blob, { contentType: 'image/jpeg' });
+    const task = ref.put(blob, { contentType: 'image/jpeg'});
 
     task.on('state_changed', 
       (snapshot) => {
@@ -106,24 +97,28 @@ const HomeScreen = () => {
       () => {
         task.snapshot.ref.getDownloadURL().then((downloadURL) => {
           console.log(downloadURL);
-          setPhotourlDb(downloadURL);
 
       });
     })
 
-    
-     firebase.firestore().collection('users').doc(user.uid).update({
-      Bio:bio,
-      Photo:photourlDb
-    }).catch(error => console.log(error.message))
-    ;
-
-    
+   
   };
 
 
+  const handleSignOut = () => {      // when the user click on sign out , fire base save it.
+    saveInDb();         // save The bio change
+    auth.signOut().then(() =>
+     { navigation.replace("Less loneless");})
+      .catch((error) => alert(error.message));
+  };
 
-
+  const saveInDb = ()=>{
+    if(bio.length!=0){
+      firebase.firestore().collection('users').doc(user.uid).update({
+        Bio:bio
+      }).catch(error => console.log(error.message));
+    }
+  }
 
 
   return (
