@@ -58,6 +58,7 @@ const RegisterScreen = () => {
         firebase.firestore().collection('users').doc(user.uid).set({
           Bio:"",
           Birth:date,
+          Id:user.uid,
           Email:email,
           EventsId:[],
           Friends:[],
