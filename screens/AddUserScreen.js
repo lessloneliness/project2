@@ -1,5 +1,5 @@
 import {React,useState,useEffect} from 'react';
-import { Text, View ,TouchableOpacity,StyleSheet,Image} from 'react-native';
+import { Text, View ,TouchableOpacity,StyleSheet,ScrollView} from 'react-native';
 import { useNavigation } from '@react-navigation/core'
 import firebase from 'firebase/app';
 import 'firebase/firestore';
@@ -37,7 +37,8 @@ const AddUserScreen = () => {
 
     
   return (
-    
+    <ScrollView>
+
     <View style={{justifyContent: "center",marginTop:30, alignItems: "center" }}>
       <Text>All the user in the app</Text> 
       <View style={styles.container}>
@@ -46,8 +47,11 @@ const AddUserScreen = () => {
           <View style={styles.container}>
             <Text style={styles.item}>Email:{person.Email}</Text>
             <Text style={styles.item}>Bio:{person.Bio}</Text>
-            <Image style={styles.Image} source=  {require("../assets/logo.jpg")}></Image>
-
+            <TouchableOpacity
+             onPress={ ()=>navigation.replace("Home")}
+             style={[styles.button3, styles.buttonOutline]}  >
+             <Text style={styles.buttonOutlineText}>Send request:</Text>
+             </TouchableOpacity>
           </View>
         );
       })}
@@ -59,7 +63,8 @@ const AddUserScreen = () => {
           <Text style={styles.buttonOutlineText}>Back</Text>
         </TouchableOpacity>
     </View>
-    
+    </ScrollView>
+
     
   );
 }
@@ -103,6 +108,15 @@ const styles = StyleSheet.create({
       borderRadius: 10,
       alignItems: 'center',
       marginTop: 40,
+    },
+    button3: {
+      backgroundColor: 'white',
+      width: '80%',
+      padding: 5,
+      borderRadius: 10,
+      alignItems: 'center',
+      marginTop: 2,
+      marginBottom:10
     },
     button2: {
       backgroundColor: 'black',

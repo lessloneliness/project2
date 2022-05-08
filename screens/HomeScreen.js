@@ -137,39 +137,48 @@ const HomeScreen = () => {
     <ScrollView>
       <SafeAreaView>
         <View style={styles.emailView}>
-          <Text> {myText}</Text>
-          <Text>{auth.currentUser?.email}</Text>
-        </View>
-        <View style={styles.container}>
-          <View style={styles.body}></View>
-          <Text style={styles.text}>Less Loneliness</Text>
-          <Text
+        <Text style={styles.text}>Less Loneliness</Text>
+        <Text
             style={{
               color: "red",
-              fontSize: 20,
+              fontSize: 15,
               textAlign: "center",
               margin: 0,
               fontStyle: "italic",
               marginBottom: 1,
-              marginTop: 3,
+              marginTop: 2,
             }}
           >
             Create Profile
           </Text>
-          <Button title={"Add Photo"} onPress={pickImage}></Button>
+          <Text> {myText}</Text>
+          <Text>{auth.currentUser?.email}</Text>
+        </View>
+        
+         <View style={styles.container2}>
           <Image style={styles.Image} source={{ uri: image }}></Image>
-          <View style={{ alignItems: "center" }}></View>
+          <Button title={"Add Photo"} onPress={pickImage}></Button>
+        </View>
+
+        <View style={styles.container}>
+
+       
+         
           <Text>Enter bio</Text>
           <TextInput
             style={styles.input}
             placeholder="bio details"
             onChangeText={(val) => setBio(val)}
+            multiline={true}
+
           />
           <Text>Bio:{bio}</Text>
-          <Button
-            title={"Add User"}
+
+          <Button 
+            title={"Add friend"}
             onPress={() => navigation.replace("Add User Screen")}
-          ></Button>
+            
+          > </Button>
           <Button
             title={"Create Group"}
             onPress={() => navigation.replace("groupScreen")}
@@ -178,6 +187,8 @@ const HomeScreen = () => {
             title={"Create Event"}
             onPress={() => navigation.replace("Create Event Screen")}
           ></Button>
+
+
           <Picker
             style={styles.Picker}
             selcetedValue={pickerValue}
@@ -191,6 +202,8 @@ const HomeScreen = () => {
             onValueCahnges={(itemValue) => setPickerValue(itemValue)}
           >
             <Picker.Item label="My Group" value="My Group" />
+            <Picker.Item label="My Group" value="My Group" />
+
           </Picker>
           <Picker
             style={styles.Picker}
@@ -215,32 +228,39 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     width: 400,
-    height: 700,
+    height: 500,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
   },
+   container2: {
+   backgroundColor: "white",
+   alignItems: "center",
+   justifyContent: "center",
+  },
   text: {
-    fontSize: 30,
+    fontSize: 23,
     color: "green",
     fontStyle: "italic",
     marginTop: 0,
-    marginBottom: 10,
+    marginBottom: 1,
   },
   input: {
     borderWidth: 1,
     borderColor: "#777",
     padding: 8,
-    margin: 10,
-    width: 200,
+    margin: 9,
+    width: 300,
+    height:100,
   },
   emailView: {
     alignItems: "center",
-    marginVertical: "5%",
+    marginVertical: "1%",
+    marginBottom:10,
   },
   Image: {
-    width: 150,
-    height: 150,
+    width: 100,
+    height: 100,
     borderRadius: 150 / 2,
     overflow: "hidden",
     borderWidth: 3,
@@ -255,6 +275,15 @@ const styles = StyleSheet.create({
     fontSize: 16,
     marginTop: 20,
   },
+  button2: {
+    flexDirection: 'row', 
+    height: 50, 
+    backgroundColor: 'yellow',
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginTop: 50,
+    elevation:3,
+},
   Picker: {
     width: 140,
     height: 45,

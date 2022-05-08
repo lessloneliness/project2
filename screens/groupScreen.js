@@ -15,7 +15,7 @@ import DropDownPicker from 'react-native-dropdown-picker'
         <View style ={styles.container}>
             <Text style={styles.headerText}>Create Group</Text>
             <View style={styles.formContainer}>
-                <TextInput style={styles.textInput}placeholder='הקלד שם קבוצה'></TextInput>
+                <TextInput style={styles.textInput}placeholder='Type a group name'></TextInput>
                 <DropDownPicker
                     items={[
                         {label: 'English', value: 'en'},
