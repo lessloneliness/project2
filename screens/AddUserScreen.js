@@ -3,13 +3,13 @@ import { Text, View ,TouchableOpacity,StyleSheet,ScrollView} from 'react-native'
 import { useNavigation } from '@react-navigation/core'
 import firebase from 'firebase/app';
 import 'firebase/firestore';
+import { auth } from '../firebase'
 
 
 const AddUserScreen = () => {
     const navigation = useNavigation()    // must if we want to use navigation
     const [list, setList] = useState([]);
-    const [image, setImage] = useState(null);
-    const [img, setImg] = useState([]);
+    const user = auth.currentUser;
 
     
     useEffect(() => {
@@ -17,8 +17,8 @@ const AddUserScreen = () => {
        .then((snapshot) => {
          const docList = []
          snapshot.forEach((doc) => {
+           if(doc.data().Email!= auth.currentUser?.email)  // all the user but not with the courrent user
            docList.push(doc.data());
-           img.push(doc.data().id);
 
          })
          setList(docList);
@@ -29,6 +29,19 @@ const AddUserScreen = () => {
      }, [])
 
   
+     
+  const AddFriend = (myfriend,IdFriend) =>{
+    console.log('User 222232: ', auth.currentUser?.email);
+
+    firebase.firestore().collection('users').doc(user.uid).update({
+      Friends: firebase.firestore.FieldValue.arrayUnion(myfriend)  // add matan to my friend
+  });
+    
+  firebase.firestore().collection('users').doc(IdFriend).update({
+    Friends: firebase.firestore.FieldValue.arrayUnion(auth.currentUser?.email)  // add cuurent user (hadar) to matan array
+});
+
+  }
   
 
 
@@ -40,15 +53,16 @@ const AddUserScreen = () => {
     <ScrollView>
 
     <View style={{justifyContent: "center",marginTop:30, alignItems: "center" }}>
-      <Text>All the user in the app</Text> 
+    <Text style={styles.text}>ALL THE USER IN THE APP</Text>
       <View style={styles.container}>
       {list.map((person) => {
         return (
           <View style={styles.container}>
+            
             <Text style={styles.item}>Email:{person.Email}</Text>
             <Text style={styles.item}>Bio:{person.Bio}</Text>
             <TouchableOpacity
-             onPress={ ()=>navigation.replace("Home")}
+             onPress= {()=> AddFriend(person.Email,person.Id)}
              style={[styles.button3, styles.buttonOutline]}  >
              <Text style={styles.buttonOutlineText}>Send request:</Text>
              </TouchableOpacity>
@@ -100,6 +114,13 @@ const styles = StyleSheet.create({
       height:"15%",
       fontSize:15,
       borderWidth:1
+    },
+    text: {
+      fontSize: 23,
+      color: "green",
+      fontStyle: "italic",
+      marginTop: 0,
+      marginBottom: 33,
     },
      button: {
       backgroundColor: 'red',

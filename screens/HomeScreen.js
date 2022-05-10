@@ -176,7 +176,7 @@ const HomeScreen = () => {
 
           <Button 
             title={"Add friend"}
-            onPress={() => navigation.replace("Add User Screen")}
+            onPress={() => navigation.replace("Add Friend Screen")}
             
           > </Button>
           <Button

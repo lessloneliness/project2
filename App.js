@@ -25,7 +25,7 @@ export default function App() {
         <Stack.Screen options={{ headerShown: true }} name="Register Screen" component={RegisterScreen} />
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="groupScreen" component={GroupScreen} />
-        <Stack.Screen name="Add User Screen" component={AddUserScreen} />
+        <Stack.Screen name="Add Friend Screen" component={AddUserScreen} />
         <Stack.Screen name="Create Event Screen" component={CreateEvent} />
 
 
