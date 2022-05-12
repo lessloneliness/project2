@@ -88,7 +88,8 @@ export default AddUserScreen;
 const styles = StyleSheet.create({
   container: {
     padding: 4,
-    marginBottom:5
+    marginBottom:5,
+    
 
     
   },
@@ -121,6 +122,8 @@ const styles = StyleSheet.create({
       fontStyle: "italic",
       marginTop: 0,
       marginBottom: 33,
+      textDecorationLine: 'underline'
+
     },
      button: {
       backgroundColor: 'red',
@@ -170,6 +173,7 @@ const styles = StyleSheet.create({
       marginHorizontal: '7%',
   
     },
+    
     textArea: {
       height: 70,
       justifyContent: "flex-start"

@@ -1,4 +1,4 @@
-import { useNavigation } from "@react-navigation/core";
+import { useNavigation ,FlatList} from "@react-navigation/core";
 import React from "react";
 import {
   StyleSheet,
@@ -29,6 +29,9 @@ const HomeScreen = () => {
   const user = firebase.auth().currentUser; // from auth fire base
   const userRef = firebase.firestore().collection("users").doc(user.uid); // get the uid.
   const [pickerValue, setPickerValue] = useState("test"); //set picker
+  const [list, setList] = useState([]);
+  const [group, setgroup] = useState([]);
+
 
   userRef
     .get()
@@ -36,7 +39,13 @@ const HomeScreen = () => {
       if (doc.exists) {
         const userNameDB = JSON.stringify(doc.data().Name.First); //his name from the data  base
         const bioFromDb = JSON.stringify(doc.data().Bio);
+        const friends = JSON.stringify(doc.data().Friends);
+        const g = JSON.stringify(doc.data().GroupsId);
+
+        if(friends.length>0) setList(friends);
         setUserName(userNameDB);
+        setgroup(g);
+
         if (bioFromDb.length > 2) setBio(bioFromDb);
         const ref = firebase.storage().ref("/" + user.uid + ".jpg"); // get the url from fire base stotage
         ref
@@ -157,12 +166,40 @@ const HomeScreen = () => {
         
          <View style={styles.container2}>
           <Image style={styles.Image} source={{ uri: image }}></Image>
-          <Button title={"Add Photo"} onPress={pickImage}></Button>
-        </View>
-
-        <View style={styles.container}>
+          <TouchableOpacity
+         onPress={pickImage}
+        style={[styles.button, styles.buttonOutline]}
+        >
+        <Text style={styles.buttonOutlineText}>Add Photo</Text>
+        </TouchableOpacity>
+                </View>
 
        
+
+        <View style={styles.container}>
+        <View style={{flexDirection: "row" ,marginLeft: 4,marginBottom:10,marginTop:10, justifyContent: 'space-evenly'}}>
+        <TouchableOpacity
+          onPress={() => navigation.replace("Add Friend Screen")}
+        style={[styles.button, styles.buttonOutline]}
+        >
+        <Text style={styles.buttonOutlineText}>Add friend</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => navigation.replace("groupScreen")}
+          style={[styles.button, styles.buttonOutline]}
+        >
+        <Text style={styles.buttonOutlineText}>Create Group</Text>
+        </TouchableOpacity>
+
+        <TouchableOpacity
+          onPress={() => navigation.replace("Create Event Screen")}
+          style={[styles.button, styles.buttonOutline]}
+        >
+        <Text style={styles.buttonOutlineText}>Create Event</Text>
+        </TouchableOpacity>
+        </View>
+              
          
           <Text>Enter bio</Text>
           <TextInput
@@ -172,47 +209,12 @@ const HomeScreen = () => {
             multiline={true}
 
           />
-          <Text>Bio:{bio}</Text>
-
-          <Button 
-            title={"Add friend"}
-            onPress={() => navigation.replace("Add Friend Screen")}
-            
-          > </Button>
-          <Button
-            title={"Create Group"}
-            onPress={() => navigation.replace("groupScreen")}
-          ></Button>
-          <Button
-            title={"Create Event"}
-            onPress={() => navigation.replace("Create Event Screen")}
-          ></Button>
+          <Text style={{marginLeft: 4,marginBottom:12,marginTop:0}}>Bio:{bio}</Text>
+          <Text>My friends:{list}</Text>
+          <Text>My Group:{group}</Text>
 
 
-          <Picker
-            style={styles.Picker}
-            selcetedValue={pickerValue}
-            onValueCahnges={(itemValue) => setPickerValue(itemValue)}
-          >
-            <Picker.Item label="My friends" value="My friends" />
-          </Picker>
-          <Picker
-            style={styles.Picker}
-            selcetedValue={pickerValue}
-            onValueCahnges={(itemValue) => setPickerValue(itemValue)}
-          >
-            <Picker.Item label="My Group" value="My Group" />
-            <Picker.Item label="My Group" value="My Group" />
-
-          </Picker>
-          <Picker
-            style={styles.Picker}
-            selcetedValue={pickerValue}
-            onValueCahnges={(itemValue) => setPickerValue(itemValue)}
-          >
-            <Picker.Item label="My Events" value="My Events" />
-          </Picker>
-          <TouchableOpacity onPress={handleSignOut} style={styles.button}>
+          <TouchableOpacity onPress={handleSignOut} style={styles.buttonOutlineText}>
             <Text style={styles.buttonText}>Sign out</Text>
           </TouchableOpacity>
           <StatusBar style="auto" />
@@ -228,10 +230,25 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     width: 400,
-    height: 500,
+    height: 300,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
+  },
+  button: {
+    backgroundColor: 'blue',
+    width: '24%',
+    padding: 2,
+    borderRadius: 7,
+    alignItems: 'center',
+    marginLeft:10,
+    
+  },
+  buttonOutline: {
+    backgroundColor: 'white',
+    marginTop: 5,
+    borderColor: '#0782F9',
+    borderWidth: 2,
   },
    container2: {
    backgroundColor: "white",
