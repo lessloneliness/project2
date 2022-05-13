@@ -31,6 +31,8 @@ const HomeScreen = () => {
   const [pickerValue, setPickerValue] = useState("test"); //set picker
   const [list, setList] = useState([]);
   const [group, setgroup] = useState([]);
+  const [scrollDown, setScrollDown] = useState(false)
+  const [bioFromDb, setbioFromDb] = useState("")
 
 
   userRef
@@ -38,15 +40,16 @@ const HomeScreen = () => {
     .then(function (doc) {
       if (doc.exists) {
         const userNameDB = JSON.stringify(doc.data().Name.First); //his name from the data  base
-        const bioFromDb = JSON.stringify(doc.data().Bio);
+        setbioFromDb(JSON.stringify(doc.data().Bio));
         const friends = JSON.stringify(doc.data().Friends);
         const g = JSON.stringify(doc.data().GroupsId);
+        
 
         if(friends.length>0) setList(friends);
         setUserName(userNameDB);
         setgroup(g);
 
-        if (bioFromDb.length > 2) setBio(bioFromDb);
+          
         const ref = firebase.storage().ref("/" + user.uid + ".jpg"); // get the url from fire base stotage
         ref
           .getDownloadURL()
@@ -80,6 +83,7 @@ const HomeScreen = () => {
       setMyText("Hello" + userName);
       setImage(result.uri);
     }
+
 
     //const filename = image.substring(image.lastIndexOf('/') + 1);
 
@@ -120,7 +124,7 @@ const HomeScreen = () => {
 
   const handleSignOut = () => {
     // when the user click on sign out , fire base save it.
-    saveInDb(); // save The bio change
+     // save The bio change
     auth
       .signOut()
       .then(() => {
@@ -130,7 +134,10 @@ const HomeScreen = () => {
   };
 
   const saveInDb = () => {
-    if (bio.length != 0) {
+    setScrollDown(false)
+    alert("The changes you made were saved")
+
+    if (bio.length != 0 ) {
       firebase
         .firestore()
         .collection("users")
@@ -140,6 +147,11 @@ const HomeScreen = () => {
         })
         .catch((error) => console.log(error.message));
     }
+  };
+
+  const BioEdit = () => {
+  
+    setScrollDown(true)
   };
 
   return (
@@ -162,22 +174,23 @@ const HomeScreen = () => {
           </Text>
           <Text> {myText}</Text>
           <Text>{auth.currentUser?.email}</Text>
-        </View>
-        
-         <View style={styles.container2}>
-          <Image style={styles.Image} source={{ uri: image }}></Image>
           <TouchableOpacity
          onPress={pickImage}
-        style={[styles.button, styles.buttonOutline]}
+        style={[ styles.buttonOutline]}
         >
-        <Text style={styles.buttonOutlineText}>Add Photo</Text>
+        <Text style={styles.buttonOutlineText5}>Add Photo</Text>
         </TouchableOpacity>
-                </View>
+        </View>
+        
+        
+         <View style={styles.container2}>
+          <Image style={styles.Image} source={{ uri: image }}></Image>        
+         </View>
 
        
 
         <View style={styles.container}>
-        <View style={{flexDirection: "row" ,marginLeft: 4,marginBottom:10,marginTop:10, justifyContent: 'space-evenly'}}>
+        <View style={{flexDirection: "row" ,marginLeft: 0,marginBottom:0,marginTop:10, justifyContent: 'space-evenly'}}>
         <TouchableOpacity
           onPress={() => navigation.replace("Add Friend Screen")}
         style={[styles.button, styles.buttonOutline]}
@@ -198,25 +211,51 @@ const HomeScreen = () => {
         >
         <Text style={styles.buttonOutlineText}>Create Event</Text>
         </TouchableOpacity>
+        
         </View>
-              
-         
-          <Text>Enter bio</Text>
-          <TextInput
+     
+        <Text ></Text>
+        <Text >Write about your self</Text>
+          
+          <TextInput 
             style={styles.input}
-            placeholder="bio details"
+            placeholder={"bio"}
             onChangeText={(val) => setBio(val)}
             multiline={true}
+            editable={scrollDown}
+          
 
           />
-          <Text style={{marginLeft: 4,marginBottom:12,marginTop:0}}>Bio:{bio}</Text>
-          <Text>My friends:{list}</Text>
-          <Text>My Group:{group}</Text>
+          <View style={{flexDirection: "row" ,marginLeft: 0,marginBottom:0,marginTop:0, justifyContent: 'space-evenly'}}>
 
+             <TouchableOpacity
+          onPress={BioEdit}
+          style={[styles.button, styles.buttonOutline]}
+        >
+        <Text style={styles.buttonOutlineText}>Edit Bio</Text>
+        </TouchableOpacity>
+        <TouchableOpacity
+          onPress={saveInDb}
+          style={[styles.button, styles.buttonOutline]}
+        >
+        <Text style={styles.buttonOutlineText}>Save Bio</Text>
+        </TouchableOpacity>
+        
+        </View>
+           <Text></Text>
+           <Text style={styles.buttonOutline2}>{bioFromDb} </Text>
+           <View style={styles.emailView}>
+           <Text></Text>
+          < Text></Text>
+          <Text style={styles.buttonOutline2}>My friends:{list}</Text>
+          <Text  style={styles.buttonOutline2}>My Group:{group}</Text>
 
-          <TouchableOpacity onPress={handleSignOut} style={styles.buttonOutlineText}>
-            <Text style={styles.buttonText}>Sign out</Text>
+          <TouchableOpacity onPress={handleSignOut} style={[styles.button2, styles.buttonText]}>
+            <Text>Sign out</Text>
           </TouchableOpacity>
+        
+          </View>
+
           <StatusBar style="auto" />
         </View>
         <View style={styles.container}></View>
@@ -230,7 +269,6 @@ export default HomeScreen;
 const styles = StyleSheet.create({
   container: {
     width: 400,
-    height: 300,
     backgroundColor: "#fff",
     alignItems: "center",
     justifyContent: "center",
@@ -250,10 +288,28 @@ const styles = StyleSheet.create({
     borderColor: '#0782F9',
     borderWidth: 2,
   },
+  buttonOutline2: {
+    textAlign: 'center', // <-- the magic
+    fontWeight: 'bold',
+    fontSize: 15,
+    marginTop: 0,
+    width: 200,
+
+  },
+   buttonOutline2: {
+    textAlign: 'center', // <-- the magic
+    fontWeight: 'bold',
+    fontSize: 15,
+    marginTop: 0,
+    width: 200,
+
+  },
+  
    container2: {
    backgroundColor: "white",
    alignItems: "center",
    justifyContent: "center",
+   marginBottom:0,
   },
   text: {
     fontSize: 23,
@@ -263,11 +319,13 @@ const styles = StyleSheet.create({
     marginBottom: 1,
   },
   input: {
-    borderWidth: 1,
-    borderColor: "#777",
-    padding: 8,
-    margin: 9,
-    width: 300,
+    backgroundColor: 'silver',
+    paddingHorizontal: 15,
+    paddingVertical: 7,
+    borderRadius: 25,
+    marginBottom: 5,
+    marginTop:10,
+    width: 200,
     height:100,
   },
   emailView: {
@@ -287,20 +345,20 @@ const styles = StyleSheet.create({
     marginVertical: "0%",
   },
   buttonText: {
-    color: "red",
-    fontWeight: "700",
-    fontSize: 16,
+    color: "green",
+    fontSize: 2,
     marginTop: 20,
+    backgroundColor:"red"
   },
   button2: {
-    flexDirection: 'row', 
-    height: 50, 
-    backgroundColor: 'yellow',
+    backgroundColor: 'white',  // sumbit btn
+    padding: 10,
+    width:100,
+    borderRadius: 50,
     alignItems: 'center',
-    justifyContent: 'center',
-    marginTop: 50,
-    elevation:3,
+    borderWidth: 1,
 },
+
   Picker: {
     width: 140,
     height: 45,
