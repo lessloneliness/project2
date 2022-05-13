@@ -247,8 +247,9 @@ const HomeScreen = () => {
            <View style={styles.emailView}>
            <Text></Text>
           < Text></Text>
-          <Text style={styles.buttonOutline2}>My friends:{list}</Text>
-          <Text  style={styles.buttonOutline2}>My Group:{group}</Text>
+          <TouchableOpacity onPress={ ()=>navigation.replace("My Friend")} style={[styles.button11, styles.buttonText11]}>
+            <Text>My friends</Text>
+          </TouchableOpacity>
 
           <TouchableOpacity onPress={handleSignOut} style={[styles.button2, styles.buttonText]}>
             <Text>Sign out</Text>
@@ -350,6 +351,18 @@ const styles = StyleSheet.create({
     marginTop: 20,
     backgroundColor:"red"
   },
+  buttonText11: {
+    color: "blue",
+    fontSize: 12,
+  },
+  button11: {
+    backgroundColor: 'white',  // sumbit btn
+    padding: 10,
+    width:100,
+    borderRadius: 50,
+    alignItems: 'center',
+    borderWidth: 0,
+},
   button2: {
     backgroundColor: 'white',  // sumbit btn
     padding: 10,

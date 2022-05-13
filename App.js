@@ -11,6 +11,7 @@ import xxx from './screens/xxx';
 import GroupScreen from './screens/groupScreen';
 import AddUserScreen from './screens/AddUserScreen';
 import CreateEvent from './screens/CreateEvent';
+import ListFriendScreen from './screens/ListFriendScreen';
 
 
 
@@ -27,6 +28,7 @@ export default function App() {
         <Stack.Screen name="groupScreen" component={GroupScreen} />
         <Stack.Screen name="Add Friend Screen" component={AddUserScreen} />
         <Stack.Screen name="Create Event Screen" component={CreateEvent} />
+        <Stack.Screen name="My Friend" component={ListFriendScreen} />
 
 
       </Stack.Navigator>
